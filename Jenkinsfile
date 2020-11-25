@@ -2,13 +2,15 @@ pipeline {
   agent any
   environment {
     REPLACE=true
-    AWS_ACCESS_KEY_ID=""
-    AWS_SECRET_ACCESS_KEY=""
+    AWS_ACCESS_KEY_ID=credential('aws-access-key')
+    AWS_SECRET_ACCESS_KEY=credential('aws-secret-key')
   }
   stages {
     stage('Ensure bucket exists') {
       steps {
-        echo "Running terraform"
+        cd terraform
+        terraform init
+        terraform apply
       }
     }
     stage('Archive Jenkins home') {

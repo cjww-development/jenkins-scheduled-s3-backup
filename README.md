@@ -6,7 +6,6 @@ Jenkins pipeline to automate the backup of the jenkins home directory to a confi
 - An AWS account
 - A Jenkins instance
 - Terraform
-- Terragrunt
 
 ## Config
 The automated backup needs to know four things.
