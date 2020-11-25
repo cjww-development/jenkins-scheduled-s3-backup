@@ -1,7 +1,9 @@
 pipeline {
   agent any
   environment {
-
+    REPLACE=true
+    AWS_ACCESS_KEY_ID=""
+    AWS_SECRET_ACCESS_KEY=""
   }
   stages {
     stage('Ensure bucket exists') {
