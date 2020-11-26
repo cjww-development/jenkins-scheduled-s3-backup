@@ -23,11 +23,16 @@ pipeline {
     stage('Archive Jenkins home') {
       steps {
         script {
-          if(env.Versioned == "true") {
-            sh "archiving/versioned-archive.sh"
-          } else {
-            sh "archiving/archive.sh"
-          }
+//           if(env.Versioned == "true") {
+//             sh "archiving/versioned-archive.sh"
+//           } else {
+//             sh "archiving/archive.sh"
+//           }
+          sh '''
+          touch ./jenkins_backup.tar
+          ls -al
+          tar --exclude=jenkins_backup.tar -cvf ./jenkins_backup.tar -C $JENKINS_HOME .
+          '''
         }
       }
     }
