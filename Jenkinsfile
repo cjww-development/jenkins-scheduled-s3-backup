@@ -29,8 +29,9 @@ pipeline {
 //             sh "archiving/archive.sh"
 //           }
           sh '''
+          touch ./jenkins_backup.tar
           ls -al
-          tar -czvf jenkins_backup.tar $JENKINS_HOME
+          tar --exclude=jenkins_backup.tar -czvf jenkins_backup.tar $JENKINS_HOME
           '''
         }
       }
