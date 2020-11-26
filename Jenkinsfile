@@ -1,21 +1,34 @@
 pipeline {
   agent any
-  environment {
-    REPLACE=true
-    AWS_ACCESS_KEY_ID=credential('aws-access-key')
-    AWS_SECRET_ACCESS_KEY=credential('aws-secret-key')
+  parameters {
+    booleanParam(name: 'Versioned', defaultValue: false, description: 'Create versioned jenkins backups or not')
   }
   stages {
     stage('Ensure bucket exists') {
       steps {
-        cd terraform
-        terraform init
-        terraform apply
+        script {
+          withCredentials([string(credentialsId: 'jenkins_backup_bucket', variable: 'BUCKET_NAME'), string(credentialsId: 'aws-access-key', variable: 'AWS_KEY'), string(credentialsId: 'aws-secret-key', variable: 'AWS_SEC')]) {
+            sh '''
+              export TF_VAR_bucket_name=$BUCKET_NAME
+              export AWS_ACCESS_KEY_ID=$AWS_KEY
+              export AWS_SECRET_ACCESS_KEY=$AWS_SEC
+              cd terraform
+              terraform init
+              terraform apply --auto-approve || true
+            '''
+          }
+        }
       }
     }
     stage('Archive Jenkins home') {
       steps {
-        echo "Archiving $JENKINS_HOME"
+        script {
+          if(env.Versioned == "true") {
+            sh "archiving/versioned-archive.sh"
+          } else {
+            sh "archiving/archive.sh"
+          }
+        }
       }
     }
     stage('Pushing archive to S3') {
