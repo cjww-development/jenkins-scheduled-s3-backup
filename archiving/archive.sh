@@ -1,2 +1,2 @@
 touch ./jenkins_backup.tar
-tar -cvf ./jenkins_backup.tar -C $JENKINS_HOME .
+tar --exclude=jenkins_backup.tar -cvf ./jenkins_backup.tar -C $JENKINS_HOME .
